@@ -1,0 +1,201 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/bootstrap.min.js"></script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div style="margin-top: 10px;">
+            <div class="card">
+                <h2 class="card-header">Customers Monthly Report</h2>
+                <div class="card-body ">
+                    <div>
+                        <table>
+                            <tr>
+                                <th>
+                                    <span id="table_ReportFilter1"><label><b>Select Month:</b></label></span>
+                                </th>
+                                <th>
+                                    <span id="table_ReportFilter"><label><b>Select CustomerName:</b></label><br></span>
+                                </th>
+                            </tr>
+                        </table>
+                        <div style="width:90%; margin:0 auto;">
+                            <table id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>CustomerName</th>
+                                        <th>No Of Invoice</th>
+                                        <th>Selse</th>
+                                        <th>Payment Collaction</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    tr.even {
+        background-color: #F5F5F5 !important;
+    }
+</style>
+@* Load datatable css *@
+<link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+@* Load datatable js *@
+@section Scripts{
+    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "ajax": {
+                    "url": "/Default/GetList",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                //fields: [{
+
+                //    label: 'DateOfMonth:',
+                //    name: 'DateOfMonth',
+                //    type: 'datetime',
+                //    def: function () { return new Date(); },
+                //    format: 'M/D/YYYY',
+                //    fieldInfo: 'US style m/d/y format'
+                //}, {
+                //    label: 'CustomerName:',
+                //    name: 'CustomerName'
+                //}, {
+                //    label: 'NoOfInvoices:',
+                //    name: 'NoOfInvoices',
+
+                //}, {
+                //    label: 'Sales:',
+                //    name: 'Sales',
+                //    //type: 'datetime',
+                //    //def: function () { return new Date(); },
+                //    //format: 'dddd D MMMM YYYY',
+                //    //fieldInfo: 'Verbose date format',
+                //    //keyInput: false
+                //}, {
+                //        label: 'PaymentCollection:',
+                //        name: 'PaymentCollection',
+                //}
+                //],
+                columnDefs: [
+                    { type: 'stringMonthYear', targets: 0 }
+                ],
+
+                "columns": [
+                    {
+                        "data": "MonthYear",
+                        "autoWidth": true,
+
+                        //"type": "date",
+                        //"dateFormat": "mm/dd/yyyy" ,
+                        //"render": function (data)
+                        //{ return convertToDate(data); }
+
+                    },
+                    {
+                        "data": "CustomerName",
+                        "autoWidth": true,
+                    },
+                    {
+                        "data": "NoOfInvoices",
+                        "autoWidth": true,
+                    },
+                    {
+                        "data": "Sales",
+                        "autoWidth": true,
+                    },
+                    {
+                        "data": "PaymentCollection",
+                        "autoWidth": true,
+                    }
+                ],
+
+                initComplete: function () {
+                    this.api().columns([1]).every(function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value="">All</option></select>')
+                            .appendTo('#table_ReportFilter')
+                            .on('change', function () {
+                                var val = $(this).val();
+                                column.search(this.value).draw();
+                            });
+
+                        // Only contains the *visible* options from the first page
+                        console.log(column.data().unique());
+
+                        // If I add extra data in my JSON, how do I access it here besides column.data?
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    }),
+
+                        //
+                        this.api().columns([0]).every(function () {
+                            var column = this;
+                            var select = $('<select class="form-control"><option value="">All</option></select>')
+                                .appendTo('#table_ReportFilter1')
+                                .on('change', function () {
+                                    var val = $(this).val();
+                                    column.search(this.value).draw();
+                                });
+
+                            // Only contains the *visible* options from the first page
+                            console.log(column.data().unique());
+
+                            // If I add extra data in my JSON, how do I access it here besides column.data?
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>')
+                            });
+                        });
+
+                    //
+
+                },
+
+
+            });
+        });
+        //  Sorting MM-yy
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "stringMonthYear-pre": function (s) {
+                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                var dateComponents = s.split("-");
+                dateComponents[0] = dateComponents[0].replace(",", "");
+                dateComponents[1] = jQuery.trim(dateComponents[1]);
+
+                var year = dateComponents[1];
+
+                var month = 0;
+                for (var i = 0; i < months.length; i++) {
+                    if (months[i].toLowerCase() == dateComponents[0].toLowerCase().substring(0, 3)) {
+                        month = i;
+                        break;
+                    }
+                }
+
+                return new Date(year, month, 1);
+            },
+
+            "stringMonthYear-asc": function (a, b) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "stringMonthYear-desc": function (a, b) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        });
+
+    </script>
+}

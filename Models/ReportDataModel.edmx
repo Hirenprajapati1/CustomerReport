@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CustomerDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CustomerDB.dbo.Customer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Customer_No" />
+            <PropertyRef Name="Customer_Name" />
+          </Key>
+          <Property Name="Customer_No" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Customer_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CustomerDB.dbo.Invoice' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="Invoice_No" />
+            <PropertyRef Name="Customer_No" />
+            <PropertyRef Name="Invoice_Date" />
+            <PropertyRef Name="Invoice_Amount" />
+          </Key>
+          <Property Name="Invoice_No" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Customer_No" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Invoice_Date" Type="datetime" Nullable="false" />
+          <Property Name="Invoice_Amount" Type="int" Nullable="false" />
+          <Property Name="Payment_Due_Date" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CustomerDB.dbo.Payment' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="Payment_No" />
+            <PropertyRef Name="Invoice_No" />
+            <PropertyRef Name="Payment_Amount" />
+          </Key>
+          <Property Name="Payment_No" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Invoice_No" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Payment_Date" Type="datetime" />
+          <Property Name="Payment_Amount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="CustomerDBModelStoreContainer">
+          <EntitySet Name="Customer" EntityType="Self.Customer" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Customer].[Customer_No] AS [Customer_No], 
+    [Customer].[Customer_Name] AS [Customer_Name]
+    FROM [dbo].[Customer] AS [Customer]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Invoice" EntityType="Self.Invoice" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Invoice].[Invoice_No] AS [Invoice_No], 
+    [Invoice].[Customer_No] AS [Customer_No], 
+    [Invoice].[Invoice_Date] AS [Invoice_Date], 
+    [Invoice].[Invoice_Amount] AS [Invoice_Amount], 
+    [Invoice].[Payment_Due_Date] AS [Payment_Due_Date]
+    FROM [dbo].[Invoice] AS [Invoice]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Payment" EntityType="Self.Payment" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Payment].[Payment_No] AS [Payment_No], 
+    [Payment].[Invoice_No] AS [Invoice_No], 
+    [Payment].[Payment_Date] AS [Payment_Date], 
+    [Payment].[Payment_Amount] AS [Payment_Amount]
+    FROM [dbo].[Payment] AS [Payment]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CustomerDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Customer_No" />
+            <PropertyRef Name="Customer_Name" />
+          </Key>
+          <Property Name="Customer_No" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Customer_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Invoice">
+          <Key>
+            <PropertyRef Name="Invoice_No" />
+            <PropertyRef Name="Customer_No" />
+            <PropertyRef Name="Invoice_Date" />
+            <PropertyRef Name="Invoice_Amount" />
+          </Key>
+          <Property Name="Invoice_No" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Customer_No" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Invoice_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Invoice_Amount" Type="Int32" Nullable="false" />
+          <Property Name="Payment_Due_Date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Payment">
+          <Key>
+            <PropertyRef Name="Payment_No" />
+            <PropertyRef Name="Invoice_No" />
+            <PropertyRef Name="Payment_Amount" />
+          </Key>
+          <Property Name="Payment_No" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Invoice_No" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Payment_Date" Type="DateTime" Precision="3" />
+          <Property Name="Payment_Amount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="CustomerDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="Invoices" EntityType="Self.Invoice" />
+          <EntitySet Name="Payments" EntityType="Self.Payment" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CustomerDBModelStoreContainer" CdmEntityContainer="CustomerDBEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="CustomerDBModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="Customer_No" ColumnName="Customer_No" />
+                <ScalarProperty Name="Customer_Name" ColumnName="Customer_Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Invoices">
+            <EntityTypeMapping TypeName="CustomerDBModel.Invoice">
+              <MappingFragment StoreEntitySet="Invoice">
+                <ScalarProperty Name="Invoice_No" ColumnName="Invoice_No" />
+                <ScalarProperty Name="Customer_No" ColumnName="Customer_No" />
+                <ScalarProperty Name="Invoice_Date" ColumnName="Invoice_Date" />
+                <ScalarProperty Name="Invoice_Amount" ColumnName="Invoice_Amount" />
+                <ScalarProperty Name="Payment_Due_Date" ColumnName="Payment_Due_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Payments">
+            <EntityTypeMapping TypeName="CustomerDBModel.Payment">
+              <MappingFragment StoreEntitySet="Payment">
+                <ScalarProperty Name="Payment_No" ColumnName="Payment_No" />
+                <ScalarProperty Name="Invoice_No" ColumnName="Invoice_No" />
+                <ScalarProperty Name="Payment_Date" ColumnName="Payment_Date" />
+                <ScalarProperty Name="Payment_Amount" ColumnName="Payment_Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

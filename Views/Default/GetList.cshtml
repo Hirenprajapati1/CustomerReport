@@ -1,0 +1,89 @@
+﻿@model IEnumerable<CustomerReport.Models.Common.ReportData>
+
+@{
+    ViewBag.Title = "Customer Monthly Report";
+}
+
+<h2>GetList</h2>
+@*<link href="~/Scripts/datatable/css/datatable-bootstrap.css" rel="stylesheet" />
+    <link href="~/Scripts/datatable/css/datatable-bootstrap.min.css" rel="stylesheet" />*@
+@section styles{
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+}
+
+<table id="tbldata" class=" table table-striped">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>CustomerName</th>
+            <th>No Of Invoice</th>
+            <th>Selse</th>
+            <th>Payment Collaction</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+    @*<tbody>
+            @foreach (var data in Model)
+            {
+                <tr>
+                    <td>@Convert.ToString(string.Format("{0:MMM-yy}", data.DateOfMonth))</td>
+                    <td>@data.CustomerName</td>
+                    <td>@data.NoOfInvoices</td>
+                    <td>@data.Sales</td>
+                    <td>@data.PaymentCollection</td>
+                </tr>
+            }
+        </tbody>*@
+</table>
+@*<script src="~/Scripts/datatable/js/datatable.jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/datatable/js/datatable.jquery.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>*@
+
+@section scripts{
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            bindDatatable();
+        });
+
+        function bindDatatable() {
+            datatable = $('#tbldata')
+                .DataTable({
+                    "sAjaxSource": "/Default/GetList",
+                    //"bServerSide": false,
+                    //"bProcessing": true,
+                    //"bSearchable": true,
+                    //"order": [[1, 'asc']],
+
+                    "columns": [
+                        {
+                            "data": "DateOfMonth",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "CustomerName",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "NoOfInvoices",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "Sales",
+                            "autoWidth": true,
+                        },
+                        {
+                            "data": "PaymentCollection",
+                            "autoWidth": true,
+                        }
+                    ]
+                });
+        }
+    </script>
+}
